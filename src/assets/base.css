@@ -1,0 +1,43 @@
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  box-sizing: border-box;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  -webkit-user-drag: none;
+  -moz-user-drag: none;
+
+  outline: none;
+}
+
+:root {
+  --dark: #212121;
+  --white: #fff;
+
+
+  --p-1: #e7e5ef;
+  --p-2: #f8eee6;
+  --p-3: #447c7f;
+  --p-4: #8e203c;
+
+  --bg: var(--white);
+  --g: 12px;
+  --p: 12px;
+}

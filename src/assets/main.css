@@ -1,0 +1,89 @@
+@import './base.css';
+
+html,
+body {
+  --w: 100svw;
+  --h: 100svh;
+
+  background-color: var(--bg);
+  min-width: var(--w);
+  max-width: var(--w);
+  min-height: var(--h);
+  max-height: var(--h);
+
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+  Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue",
+  sans-serif;
+
+  color: var(--dark);
+}
+
+#app {
+  min-width: var(--w);
+  max-width: var(--w);
+  min-height: var(--h);
+  max-height: var(--h);
+
+  background-color: var(--bg);
+  overflow: hidden;
+  --h_header_and_footer: 60px;
+  --h_main: calc(100svh - 2 * var(--h_header_and_footer));
+}
+
+.header,
+.footer {
+  min-height: var(--h_header_and_footer);
+  max-height: var(--h_header_and_footer);
+
+  background-color: var(--p-3);
+
+  display: flex;
+  align-items: center;
+  gap: var(--g);
+  padding: 0 var(--g);
+}
+
+.header {
+  justify-content: space-between;
+}
+
+.footer {
+  justify-content: space-evenly;
+}
+
+.main {
+  min-height: var(--h_main);
+  max-height: var(--h_main);
+  overflow: hidden;
+}
+
+.page {
+  min-height: var(--h_main);
+  max-height: var(--h_main);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+
+.btn {
+  --h_btn: 30px;
+
+  height: var(--h_btn);
+  border-radius: 2px;
+  border: solid 1px var(--p-3);
+  cursor: pointer;
+}
+
+.btn-active {
+  background-color: var(--p-3);
+  border: solid 1px var(--p-3);
+  color: var(--white);
+  font-weight: bold;
+}
+
+.input {
+  --h_input: 30px;
+  height: var(--h_input);
+  padding: 0 0 0 var(--p);
+  font-size: 14px;
+}
