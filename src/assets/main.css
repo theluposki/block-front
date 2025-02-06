@@ -2,8 +2,8 @@
 
 html,
 body {
-  --w: 100svw;
-  --h: 100svh;
+  --w: 100dvw;
+  --h: 100dvh;
 
   background-color: var(--bg);
   min-width: var(--w);
