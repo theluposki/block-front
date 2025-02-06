@@ -32,7 +32,7 @@
   // Funções para gerenciar o foco
   const handleFocus = () => {
     isInputFocused.value = true
-    document.documentElement.style.setProperty('--viewport-height', 'calc(var(--vh, 1vh) * 70)')
+    document.documentElement.style.setProperty('--viewport-height', 'calc(var(--vh, 1vh) * 90)')
   }
   
   const handleBlur = () => {
