@@ -3,7 +3,7 @@
       <!-- Conteúdo acima do textarea -->
       <div class="top-content">
         <h2>Conteúdo Acima</h2>
-        <p>Rola para baixo até o textarea...</p>
+        <p>Rola para baixo até o textarea... luposki</p>
       </div>
   
       <!-- Textarea com ajuste ao teclado -->
@@ -70,7 +70,7 @@
   /* Estilos para quando o teclado está ativo */
   .keyboard-active .message-input-container {
     position: fixed;
-    bottom: calc(env(safe-area-inset-bottom) + 20px);
+    bottom: calc(env(safe-area-inset-bottom) + 80px);
     left: 0;
     right: 0;
     z-index: 1000;
