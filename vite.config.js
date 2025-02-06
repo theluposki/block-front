@@ -17,7 +17,7 @@ export default defineConfig({
         short_name: "Frieren",
         description: "Uma aplicação Vue 3 transformada em PWA!",
         theme_color: "#447c7f",
-        display: "fullscreen",
+        display: "standalone",
         display_override: ["fullscreen", "standalone", "minimal-ui"],
         icons: [
           { src: "/block-front/assets/logo-192x192.png", sizes: "192x192", type: "image/png" },
