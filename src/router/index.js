@@ -19,6 +19,11 @@ const router = createRouter({
       name: 'hashing',
       component: () => import('../views/HashingView.vue'),
     },
+    {
+      path: '/chat',
+      name: 'chat',
+      component: () => import('../views/ChatView.vue'),
+    },
   ],
 })
 

@@ -12,6 +12,9 @@ import { RouterLink } from 'vue-router'
         <RouterLink to="/hashing" class="nav-link" exact-active-class="active">
             <i class="ri-text-block"></i>
         </RouterLink>
+        <RouterLink to="/chat" class="nav-link" exact-active-class="active">
+            <i class="ri-chat-3-line"></i>
+        </RouterLink>
     </footer>
 </template>
 
