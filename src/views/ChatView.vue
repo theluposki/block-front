@@ -1,20 +1,23 @@
 <template>
-    <div class="container">
-      <!-- Conteúdo acima do textarea -->
-      <div class="top-content">
-        <h2>Conteúdo Acima</h2>
-        <p>Rola para baixo até o textarea... luposki</p>
-      </div>
+    <div class="fullscreen-container">
+      <!-- Header do app -->
+      <header class="app-header">
+        <!-- Seu conteúdo do header aqui -->
+      </header>
   
-      <!-- Textarea com ajuste ao teclado -->
-      <div class="message-input-container">
+      <!-- Conteúdo principal -->
+      <main class="content">
+        <!-- Seu conteúdo aqui -->
+      </main>
+  
+      <!-- Área de mensagem -->
+      <div class="message-area">
         <textarea 
-          ref="messageInput"
-          v-model="message"
-          placeholder="Digite sua mensagem aqui..."
+          v-model="mensagem"
           @focus="handleFocus"
           @blur="handleBlur"
-        />
+          placeholder="Digite sua mensagem..."
+        ></textarea>
       </div>
     </div>
   </template>
@@ -22,63 +25,65 @@
   <script setup>
   import { ref } from 'vue'
   
-  // Referência ao textarea
-  const messageInput = ref(null)
+  // Estado da aplicação
+  const mensagem = ref('')
+  const isInputFocused = ref(false)
   
-  // Estado da mensagem
-  const message = ref('')
-  
-  // Funções para lidar com o foco do teclado
+  // Funções para gerenciar o foco
   const handleFocus = () => {
-    // Adiciona classe para ajustar o layout quando o teclado aparece
-    document.body.classList.add('keyboard-active')
+    isInputFocused.value = true
+    document.documentElement.style.setProperty('--viewport-height', 'calc(var(--vh, 1vh) * 70)')
   }
   
   const handleBlur = () => {
-    // Remove a classe quando o teclado some
-    document.body.classList.remove('keyboard-active')
+    isInputFocused.value = false
+    document.documentElement.style.setProperty('--viewport-height', 'var(--vh, 1vh) * 100')
   }
   </script>
   
   <style scoped>
-  .container {
-    height: 100svh;
-    display: flex;
-    flex-direction: column;
+  /* Definição inicial do viewport height */
+  :root {
+    --vh: 1px * var(--viewport-height, 100);
   }
   
-  .top-content {
-    flex-grow: 1;
-    padding: 20px;
+  .fullscreen-container {
+    min-height: calc(100svh - env(safe-area-inset-bottom));
+    max-height: calc(100svh - env(safe-area-inset-bottom));
+    position: relative;
+    overflow-y: auto;
   }
   
-  .message-input-container {
-    padding: 20px;
+  .app-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
     background-color: white;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .content {
+    padding-bottom: 120px;
+  }
+  
+  .message-area {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    padding: 10px 20px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    transform: translateY(calc(-50% - env(safe-area-inset-bottom)));
+    transition: transform 0.3s ease-out;
   }
   
   textarea {
     width: 100%;
-    min-height: 120px;
+    min-height: 40px;
     padding: 12px;
     border-radius: 8px;
     border: 1px solid #ddd;
     resize: vertical;
-  }
-  
-  /* Estilos para quando o teclado está ativo */
-  .keyboard-active .message-input-container {
-    position: fixed;
-    bottom: calc(env(safe-area-inset-bottom) + 80px);
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    transform: translateY(0);
-    transition: transform 0.3s ease-out;
-  }
-  
-  .keyboard-active .top-content {
-    padding-bottom: 140px;
   }
   </style>
