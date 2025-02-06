@@ -1,11 +1,9 @@
 import { fileURLToPath, URL } from "node:url";
-
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 import { VitePWA } from "vite-plugin-pwa";
 
-// https://vite.dev/config/
 export default defineConfig({
   base: "/block-front/",
   plugins: [
@@ -13,9 +11,7 @@ export default defineConfig({
     vueDevTools(),
     VitePWA({
       registerType: "autoUpdate",
-      devOptions: {
-        enabled: true, // Habilitar PWA no modo desenvolvimento, opcional
-      },
+      devOptions: { enabled: true },
       manifest: {
         name: "Frieren",
         short_name: "Frieren",
@@ -23,40 +19,43 @@ export default defineConfig({
         theme_color: "#447c7f",
         display: "standalone",
         display_override: ["minimal-ui", "fullscreen"],
-        screenshots: [
-          {
-            src: "/block-front/assets/screenshot1.png",
-            sizes: "1280x720",
-            type: "image/png",
-            purpose: "any",
-            form_factor: "wide",
-          },
-          {
-            src: "/block-front/assets/screenshot2.png",
-            sizes: "360x640",
-            type: "image/png",
-            purpose: "any",
-            form_factor: "narrow",
-          },
-        ],
         icons: [
+          { src: "/block-front/assets/logo-192x192.png", sizes: "192x192", type: "image/png" },
+          { src: "/block-front/assets/logo-512x512.png", sizes: "512x512", type: "image/png" },
+        ],
+      },
+      workbox: {
+        runtimeCaching: [
           {
-            src: "/block-front/assets/logo-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
+            urlPattern: ({ request }) => request.destination === "document",
+            handler: "NetworkFirst", // Pega a versão mais recente quando online
+            options: { cacheName: "html-cache" },
           },
           {
-            src: "/block-front/assets/logo-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
+            urlPattern: ({ request }) => ["script", "style"].includes(request.destination),
+            handler: "CacheFirst", // Usa o cache primeiro para evitar requisições desnecessárias
+            options: { cacheName: "static-resources" },
+          },
+          {
+            urlPattern: ({ request }) => request.destination === "image",
+            handler: "CacheFirst",
+            options: { cacheName: "image-cache", expiration: { maxEntries: 50 } },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.(googleapis|gstatic)\.com/,
+            handler: "CacheFirst",
+            options: { cacheName: "google-fonts", expiration: { maxEntries: 30 } },
+          },
+          {
+            urlPattern: /^https:\/\/cdn\.jsdelivr\.net/,
+            handler: "CacheFirst",
+            options: { cacheName: "cdn-cache", expiration: { maxEntries: 20 } },
           },
         ],
       },
     }),
   ],
   resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-    },
+    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
   },
 });
