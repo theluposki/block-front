@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) navigator.serviceWorker.register('/block-front/dev-sw.js?dev-sw', { scope: '/block-front/', type: 'classic' })

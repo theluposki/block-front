@@ -70,7 +70,7 @@ pre {
     overflow-x: auto;
     font-family: "Fira Code", monospace;
     /* Fonte monoespaçada */
-    font-size: 14px;
+    font-size: 10px;
     line-height: 1.5;
     white-space: pre-wrap;
     /* Quebra de linha automática */
