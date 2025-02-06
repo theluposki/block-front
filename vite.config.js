@@ -25,14 +25,14 @@ export default defineConfig({
         display_override: ["minimal-ui", "fullscreen"],
         screenshots: [
           {
-            src: "/assets/screenshot1.png",
+            src: "/block-front/assets/screenshot1.png",
             sizes: "1280x720",
             type: "image/png",
             purpose: "any",
             form_factor: "wide",
           },
           {
-            src: "/assets/screenshot2.png",
+            src: "/block-front/assets/screenshot2.png",
             sizes: "360x640",
             type: "image/png",
             purpose: "any",
@@ -41,12 +41,12 @@ export default defineConfig({
         ],
         icons: [
           {
-            src: "/assets/logo-192x192.png",
+            src: "/block-front/assets/logo-192x192.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "/assets/logo-512x512.png",
+            src: "/block-front/assets/logo-512x512.png",
             sizes: "512x512",
             type: "image/png",
           },
