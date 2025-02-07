@@ -9,11 +9,8 @@ import { RouterLink } from 'vue-router'
         <RouterLink to="/about" class="nav-link" exact-active-class="active">
             <i class="ri-info-card-line"></i>
         </RouterLink>
-        <RouterLink to="/hashing" class="nav-link" exact-active-class="active">
-            <i class="ri-text-block"></i>
-        </RouterLink>
-        <RouterLink to="/chat" class="nav-link" exact-active-class="active">
-            <i class="ri-chat-3-line"></i>
+        <RouterLink to="/config" class="nav-link" exact-active-class="active">
+            <i class="ri-tools-line"></i>
         </RouterLink>
     </footer>
 </template>

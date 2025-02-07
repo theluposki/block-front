@@ -15,14 +15,9 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
     {
-      path: '/hashing',
-      name: 'hashing',
-      component: () => import('../views/HashingView.vue'),
-    },
-    {
-      path: '/chat',
-      name: 'chat',
-      component: () => import('../views/ChatView.vue'),
+      path: '/config',
+      name: 'config',
+      component: () => import('../views/config.vue'),
     },
   ],
 })
