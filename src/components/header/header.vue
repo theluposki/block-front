@@ -1,5 +1,14 @@
 <script setup>
 import { RouterLink } from "vue-router"
+import { ref, onMounted } from "vue";
+
+const version = ref("0")
+
+onMounted(() => {
+    if(localStorage.getItem("version")){
+        version.value = localStorage.getItem("version")
+    }
+})
 </script>
 
 <template>
@@ -8,6 +17,8 @@ import { RouterLink } from "vue-router"
             <img src="/assets/logo-512x512.png" alt="logo">
             <span>Frieren</span>
         </RouterLink>
+
+        <span class="version">{{ version }}</span>
     </header>
 </template>
 
@@ -43,6 +54,12 @@ import { RouterLink } from "vue-router"
         scale: .98;
     }
 
+}
+
+.version {
+    color: var(--p-1);
+    font-size: 14px;
+    align-self: center;
 }
 
 </style>
