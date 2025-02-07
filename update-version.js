@@ -1,7 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const versionFile = path.resolve(__dirname, "version.json");
+// Modificado para o caminho dentro da pasta public
+const versionFile = path.resolve(__dirname, "public", "version.json");
 
 // 📌 Lê a versão atual do arquivo
 const versionData = JSON.parse(fs.readFileSync(versionFile, "utf-8"));
