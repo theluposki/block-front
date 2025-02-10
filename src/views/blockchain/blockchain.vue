@@ -1,51 +1,20 @@
 <script setup>
-import { ref } from 'vue'
-import CryptoJS from 'crypto-js';
+import { ref, computed } from 'vue'
 import JsonViewer from '@/components/JsonViewer.vue';
+import { useBlockChain } from '@/stores/blockchain';
 
-const genesi = () => {
-  return {
-    index: 1,
-    hash: '0000',
-    timestamp: Date.now(),
-    data: {},
-    lastHash: '0000',
-  }
-}
+const uBlockchain = useBlockChain();
 
-const block_chain = ref([genesi()])
+const blockchain = computed(() => uBlockchain.blockchain)
 
-const Block = (lastBlock, data) => {
-
-  console.log(lastBlock)
-  const newBlock = {
-    index: lastBlock.index + 1,
-    timestamp: Date.now(),
-    data,
-    lastHash: lastBlock.hash,
-  }
-
-  const newHash = CryptoJS.SHA256(JSON.stringify(newBlock)).toString()
-
-  return { ...newBlock, hash: newHash}
-}
-
-
-const Mine = () => {
-  const lastBlock = block_chain.value[block_chain.value.length -1]
-
-  const newBlock = Block(lastBlock, 1000)
-
-  block_chain.value.push(newBlock)
-}
 </script>
 
 <template>
   <div class="page-int">
     <div class="container">
-      blockchain
-      <button class="btn" @click="Mine">Mine</button>
-      <JsonViewer :json-text="block_chain" />
+      <h3>blockchain</h3>
+      <button class="btn" @click="uBlockchain.Mine">Mine</button>
+      <JsonViewer :json-text="blockchain" />
     </div>
   </div>
 </template>
