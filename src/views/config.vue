@@ -36,7 +36,8 @@ const fetchVersion = async () => {
     const data = await response.json();
     newVersion.value = data.version;
 
-    console.log(newVersion)
+    console.log('newVersion', newVersion)
+    alert(newVersion)
     // Se a versão local for diferente da nova, atualiza
     if (currentVersion.value !== newVersion.value) {
       localStorage.setItem("version", newVersion.value);
