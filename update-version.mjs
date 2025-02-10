@@ -4,7 +4,7 @@ import path from 'path';
 // Usando import.meta.url para obter o caminho do diretório
 const __filename = new URL(import.meta.url).pathname;
 const __dirname = path.dirname(__filename);
-
+//
 // Agora o caminho do version.json está correto
 const versionFile = path.resolve(__dirname, 'public', 'version.json');
 
