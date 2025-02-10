@@ -4,7 +4,7 @@ import JsonViewer from '@/components/JsonViewer.vue';
 import { useBlockChain } from '@/stores/blockchain';
 
 const uBlockchain = useBlockChain();
-// 
+// -
 
 const blockchain = computed(() => uBlockchain.blockchain)
 
