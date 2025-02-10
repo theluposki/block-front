@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { encryptValue, decryptValue } from '../../../utils/crypto.js'
+import { encryptValue, decryptValue } from '../../utils/crypto.js'
 
 const keyEnc = ref("")
 const keyEncMessage = ref("")
@@ -108,7 +108,7 @@ const pasteTextDec = async () => {
 </script>
 
 <template>
-  <div class="page">
+  <div class="page-int">
     <div class="container">
       <fieldset>
         <legend>Encripted</legend>

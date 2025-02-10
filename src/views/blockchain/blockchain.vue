@@ -41,7 +41,7 @@ const Mine = () => {
 </script>
 
 <template>
-  <div class="blockchain page">
+  <div class="page-int">
     <div class="container">
       blockchain
       <button class="btn" @click="Mine">Mine</button>

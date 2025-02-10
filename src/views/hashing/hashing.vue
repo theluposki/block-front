@@ -135,7 +135,7 @@ const select = (typ) => {
 </script>
 
 <template>
-  <div class="page">
+  <div class="page-int">
     <main class="container">
     <div class="controlers">
       <button @click="select('MD5')" :class="type === 'MD5' ? 'btn btn-active':'btn' ">MD5</button>

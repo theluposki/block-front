@@ -15,6 +15,28 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue'),
     },
     {
+      path: '/crypto',
+      name: 'crypto',
+      component: () => import('../views/crypto.vue'),
+      children: [
+        {
+          path: '',
+          name: 'hashing',
+          component: () => import('../views/hashing/hashing.vue')
+        },
+        {
+          path: 'encrypted',
+          name: 'encrypted',
+          component: () => import('../views/encrypted/encrypted.vue')
+        },
+        {
+          path: 'blockchain',
+          name: 'blockchain',
+          component: () => import('../views/blockchain/blockchain.vue')
+        },
+      ]
+    },
+    {
       path: '/config',
       name: 'config',
       component: () => import('../views/config.vue'),
