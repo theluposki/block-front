@@ -1,14 +1,14 @@
 import CryptoJS from "crypto-js";
 
-let isMining = true; // Flag para controle do loop
+let isMining = true;
 
 self.onmessage = function (event) {
   if (event.data === "stop") {
-    isMining = false; // Interrompe a mineração
+    isMining = false;
     return;
   }
 
-  const { lastBlock, difficulty } = event.data;
+  const { lastBlock, difficulty, workerIndex } = event.data;
   let nonce = 0;
   let hash = "";
   let timestamp;
@@ -22,17 +22,17 @@ self.onmessage = function (event) {
       index: lastBlock.index + 1,
       timestamp,
       nonce,
-      data: 1000,
+      data: 1000, // Aqui você pode integrar dados de transações, por exemplo
       lastHash: lastBlock.hash,
     };
 
     hash = blockHash(newBlock);
 
     // Envia cada hash gerado para a UI
-    self.postMessage({ hash, nonce, difficulty });
+    self.postMessage({ hash, nonce, difficulty, workerIndex });
 
     if (hash.startsWith("0".repeat(difficulty))) {
-      self.postMessage({ newBlock: { ...newBlock, hash }, done: true });
+      self.postMessage({ newBlock: { ...newBlock, hash }, done: true, workerIndex });
       break;
     }
   }

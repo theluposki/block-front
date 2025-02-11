@@ -1,18 +1,14 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { genesi } from "./genesis.js";
-import MineWorker from "@/workers/mineWorker?worker";
+import MineWorker from "@/workers/mineWorker?worker"; // Importação correta no Vite
 
 export const useBlockChain = defineStore("blockchain", () => {
   const blockchain = ref([genesi()]);
   const DIFFICULTY = ref(2);
-  const miningWorker = ref(null);
   const stop = ref(false);
-  const currentHash = ref({
-    hash: "", 
-    nonce: 0,
-    difficulty: DIFFICULTY.value,
-  });
+  const currentHash = ref({}); // Exibe o hash e informações em tempo real
+  const workers = ref([]); // Array para armazenar múltiplos workers
 
   const setDifficulty = (difficulty) => {
     DIFFICULTY.value = difficulty;
@@ -22,45 +18,58 @@ export const useBlockChain = defineStore("blockchain", () => {
     blockchain.value.push(block);
   };
 
-  const Mine = () => {
+  /**
+   * Inicia a mineração usando múltiplos Web Workers.
+   * O primeiro worker a encontrar um hash válido "vence"
+   * e os demais são terminados.
+   */
+  const MineMulti = () => {
     stop.value = false;
-    currentHash.value = {}; 
+    currentHash.value = {};
 
-    if (miningWorker.value) {
-      miningWorker.value.terminate();
-    }
+    // Termina qualquer worker ativo antes de iniciar uma nova mineração
+    workers.value.forEach((w) => w.terminate());
+    workers.value = [];
 
-    miningWorker.value = new MineWorker();
-
+    // Converte o último bloco para um objeto puro
     const lastBlock = JSON.parse(JSON.stringify(blockchain.value.at(-1)));
-    miningWorker.value.postMessage({ lastBlock, difficulty: DIFFICULTY.value });
+    let found = false;
+    const NUM_WORKERS = 4; // Quantos workers você quer iniciar
 
-    miningWorker.value.onmessage = (event) => {
-      if (event.data) {
-        currentHash.value = event.data;
-      }
+    for (let i = 0; i < NUM_WORKERS; i++) {
+      const worker = new MineWorker();
+      worker.postMessage({ lastBlock, difficulty: DIFFICULTY.value, workerIndex: i });
+      worker.onmessage = (event) => {
+        if (event.data) {
+          // Atualiza a UI com o último hash gerado (pode incluir workerIndex para depuração)
+          currentHash.value = event.data;
+        }
 
-      if (event.data.done) {
-        addBlock(event.data.newBlock);
-        miningWorker.value.terminate();
-        miningWorker.value = null;
-      }
-    };
+        if (event.data.done && !found) {
+          found = true;
+          addBlock(event.data.newBlock);
+          // Termina todos os workers
+          workers.value.forEach((w) => w.terminate());
+          workers.value = [];
+        }
+      };
+      workers.value.push(worker);
+    }
   };
 
   const StopMining = () => {
     stop.value = true;
-    if (miningWorker.value) {
-      miningWorker.value.postMessage("stop"); // Envia o sinal de parada para o Worker
-      miningWorker.value.terminate();
-      miningWorker.value = null;
-    }
+    workers.value.forEach((w) => {
+      w.postMessage("stop"); // Sinal para que o worker interrompa a mineração
+      w.terminate();
+    });
+    workers.value = [];
   };
 
   return {
     blockchain,
-    Mine,
-    StopMining, // Adicionando a função de parar a mineração
+    MineMulti,
+    StopMining,
     setDifficulty,
     stop,
     currentHash,

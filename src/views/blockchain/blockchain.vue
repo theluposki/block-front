@@ -26,7 +26,7 @@ const setDiff = () => {
       <input type="number" v-model="difficulty" class="input" @keyup="setDiff" placeholder="dificuldade" min="0"
         max="10">
       <div class="group-btns">
-        <button class="btn" @click="uBlockchain.Mine">Mine</button>
+        <button class="btn" @click="uBlockchain.MineMulti">Mine</button>
         <button class="btn" @click="uBlockchain.StopMining">Stop</button>
       </div>
       <JsonViewer :json-text="blockchain[blockchain.length - 1]" />
