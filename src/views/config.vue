@@ -36,11 +36,11 @@ const fetchVersion = async () => {
     const data = await response.json();
     newVersion.value = data.version;
 
-    console.log('newVersion', newVersion.value)
     // Se a versão local for diferente da nova, atualiza
     if (currentVersion.value !== newVersion.value) {
       localStorage.setItem("version", newVersion.value);
       currentVersion.value = newVersion.value;
+      window.location.reload();
     }
   } catch {
     newVersion.value = "Desconhecido";
@@ -55,6 +55,7 @@ const updatePWA = () => {
     currentVersion.value = newVersion.value;
   }
   alert("Aplicativo atualizado com sucesso! 🚀");
+  window.location.reload();
 };
 
 // 🔥 Reinstalar PWA (remove SW, cache e recarrega)
@@ -80,6 +81,7 @@ const checkForUpdates = async () => {
     localStorage.setItem("version", newVersion.value);
     currentVersion.value = newVersion.value;
     alert("Nova versão encontrada: " + newVersion.value);
+    window.location.reload();
   } else {
     alert("Você já está na versão mais recente!");
   }
