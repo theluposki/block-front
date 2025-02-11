@@ -4,8 +4,7 @@ import JsonViewer from '@/components/JsonViewer.vue';
 import { useBlockChain } from '@/stores/blockchain';
 
 const uBlockchain = useBlockChain();
-const difficulty = ref(null)
-// -
+const difficulty = ref(2)
 
 const blockchain = computed(() => uBlockchain.blockchain)
 const currentHash = computed(() => uBlockchain.currentHash)
@@ -19,10 +18,13 @@ const setDiff = () => {
 <template>
   <div class="page-int">
     <div class="container">
-      <h3 class="title">blockchain</h3>
+      <h3 class="title green">Blockchain</h3> 
 
+      <p class="red">proof of work</p>
       <JsonViewer :json-text="currentHash" />
-      <input type="number" v-model="difficulty" class="input" @keyup="setDiff" placeholder="dificuldade" min="0" max="10">
+      <p class="green">Nível de dificuldade</p>
+      <input type="number" v-model="difficulty" class="input" @keyup="setDiff" placeholder="dificuldade" min="0"
+        max="10">
       <div class="group-btns">
         <button class="btn" @click="uBlockchain.Mine">Mine</button>
         <button class="btn" @click="uBlockchain.stop = true">Stop</button>
@@ -36,6 +38,7 @@ const setDiff = () => {
 .title {
   display: flex;
   align-items: center;
+  justify-content: center;
   margin: var(--p) 0;
 }
 
@@ -54,5 +57,13 @@ const setDiff = () => {
   & button {
     flex: 1;
   }
+}
+
+.red {
+  color: var(--p-4);
+}
+
+.green {
+  color: var(--p-3);
 }
 </style>
