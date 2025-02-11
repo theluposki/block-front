@@ -9,14 +9,14 @@ const difficulty = ref(2);
 const blockchain = computed(() => uBlockchain.blockchain);
 const currentHash = computed(() => uBlockchain.currentHash);
 
-// Propriedade computada que formata o tempo decorrido (em segundos)
+// Propriedade computada que formata o tempo decorrido (acessando .value)
 const miningTime = computed(() => {
-  return (uBlockchain.elapsedTime / 1000).toFixed(2) + ' s';
+  return (uBlockchain.elapsedTime.value / 1000).toFixed(2) + ' s';
 });
 
 const setDiff = () => {
   uBlockchain.setDifficulty(difficulty.value);
-};
+}
 </script>
 
 <template>
