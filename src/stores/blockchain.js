@@ -7,8 +7,13 @@ export const useBlockChain = defineStore("blockchain", () => {
   const blockchain = ref([genesi()]);
   const DIFFICULTY = ref(2);
   const stop = ref(false);
-  const currentHash = ref({}); // Exibe o hash e informações em tempo real
+  const currentHash = ref({});
   const workers = ref([]); // Array para armazenar múltiplos workers
+
+  // Variáveis para controle do tempo de mineração
+  const miningStartTime = ref(null);
+  const elapsedTime = ref(0);
+  let timerInterval = null;
 
   const setDifficulty = (difficulty) => {
     DIFFICULTY.value = difficulty;
@@ -26,10 +31,18 @@ export const useBlockChain = defineStore("blockchain", () => {
   const MineMulti = () => {
     stop.value = false;
     currentHash.value = {};
-
-    // Termina qualquer worker ativo antes de iniciar uma nova mineração
+    
+    // Encerra quaisquer workers ativos
     workers.value.forEach((w) => w.terminate());
     workers.value = [];
+
+    // Inicia a contagem do tempo
+    miningStartTime.value = Date.now();
+    elapsedTime.value = 0;
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      elapsedTime.value = Date.now() - miningStartTime.value;
+    }, 100);
 
     // Converte o último bloco para um objeto puro
     const lastBlock = JSON.parse(JSON.stringify(blockchain.value.at(-1)));
@@ -41,14 +54,17 @@ export const useBlockChain = defineStore("blockchain", () => {
       worker.postMessage({ lastBlock, difficulty: DIFFICULTY.value, workerIndex: i });
       worker.onmessage = (event) => {
         if (event.data) {
-          // Atualiza a UI com o último hash gerado (pode incluir workerIndex para depuração)
+          // Atualiza as informações na UI (ex.: hash atual, nonce e qual worker enviou)
           currentHash.value = event.data;
         }
 
         if (event.data.done && !found) {
           found = true;
           addBlock(event.data.newBlock);
-          // Termina todos os workers
+          // Limpa o timer assim que o bloco é minerado
+          clearInterval(timerInterval);
+          timerInterval = null;
+          // Encerra todos os workers
           workers.value.forEach((w) => w.terminate());
           workers.value = [];
         }
@@ -64,6 +80,10 @@ export const useBlockChain = defineStore("blockchain", () => {
       w.terminate();
     });
     workers.value = [];
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
   };
 
   return {
@@ -73,5 +93,6 @@ export const useBlockChain = defineStore("blockchain", () => {
     setDifficulty,
     stop,
     currentHash,
+    elapsedTime, // Expondo o tempo decorrido
   };
 });

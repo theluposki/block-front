@@ -4,15 +4,19 @@ import JsonViewer from '@/components/JsonViewer.vue';
 import { useBlockChain } from '@/stores/blockchain';
 
 const uBlockchain = useBlockChain();
-const difficulty = ref(2)
+const difficulty = ref(2);
 
-const blockchain = computed(() => uBlockchain.blockchain)
-const currentHash = computed(() => uBlockchain.currentHash)
+const blockchain = computed(() => uBlockchain.blockchain);
+const currentHash = computed(() => uBlockchain.currentHash);
+
+// Propriedade computada que formata o tempo decorrido (em segundos)
+const miningTime = computed(() => {
+  return (uBlockchain.elapsedTime / 1000).toFixed(2) + ' s';
+});
 
 const setDiff = () => {
-  uBlockchain.setDifficulty(difficulty.value)
-}
-
+  uBlockchain.setDifficulty(difficulty.value);
+};
 </script>
 
 <template>
@@ -22,13 +26,18 @@ const setDiff = () => {
 
       <p class="red">proof of work</p>
       <JsonViewer :json-text="currentHash" />
+      
       <p class="green">Nível de dificuldade</p>
-      <input type="number" v-model="difficulty" class="input" @keyup="setDiff" placeholder="dificuldade" min="0"
-        max="10">
+      <input type="number" v-model="difficulty" class="input" @keyup="setDiff" placeholder="dificuldade" min="0" max="10">
+      
       <div class="group-btns">
         <button class="btn" @click="uBlockchain.MineMulti">Mine</button>
         <button class="btn" @click="uBlockchain.StopMining">Stop</button>
       </div>
+      
+      <!-- Exibe o tempo de mineração -->
+      <p class="green">Tempo de mineração: {{ miningTime }}</p>
+      
       <JsonViewer :json-text="blockchain[blockchain.length - 1]" />
     </div>
   </div>
@@ -53,10 +62,10 @@ const setDiff = () => {
   display: flex;
   align-items: center;
   gap: var(--g);
+}
 
-  & button {
-    flex: 1;
-  }
+.group-btns button {
+  flex: 1;
 }
 
 .red {
