@@ -1,6 +1,13 @@
 import CryptoJS from "crypto-js";
 
+let isMining = true; // Flag para controle do loop
+
 self.onmessage = function (event) {
+  if (event.data === "stop") {
+    isMining = false; // Interrompe a mineração
+    return;
+  }
+
   const { lastBlock, difficulty } = event.data;
   let nonce = 0;
   let hash = "";
@@ -8,7 +15,7 @@ self.onmessage = function (event) {
 
   const blockHash = (block) => CryptoJS.SHA256(JSON.stringify(block)).toString();
 
-  while (true) {
+  while (isMining) {
     nonce++;
     timestamp = Date.now();
     const newBlock = {

@@ -27,7 +27,7 @@ const setDiff = () => {
         max="10">
       <div class="group-btns">
         <button class="btn" @click="uBlockchain.Mine">Mine</button>
-        <button class="btn" @click="uBlockchain.stop = true">Stop</button>
+        <button class="btn" @click="uBlockchain.StopMining">Stop</button>
       </div>
       <JsonViewer :json-text="blockchain[blockchain.length - 1]" />
     </div>

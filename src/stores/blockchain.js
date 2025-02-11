@@ -1,8 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { genesi } from "./genesis.js";
-
-import MineWorker from "@/workers/mineWorker?worker"; // <-- Importação correta no Vite
+import MineWorker from "@/workers/mineWorker?worker";
 
 export const useBlockChain = defineStore("blockchain", () => {
   const blockchain = ref([genesi()]);
@@ -12,8 +11,8 @@ export const useBlockChain = defineStore("blockchain", () => {
   const currentHash = ref({
     hash: "", 
     nonce: 0,
-    difficulty: DIFFICULTY.value
-  }); // Armazena os hashes em tempo real
+    difficulty: DIFFICULTY.value,
+  });
 
   const setDifficulty = (difficulty) => {
     DIFFICULTY.value = difficulty;
@@ -25,7 +24,7 @@ export const useBlockChain = defineStore("blockchain", () => {
 
   const Mine = () => {
     stop.value = false;
-    currentHash.value = {}; // Limpa os hashes antes de começar
+    currentHash.value = {}; 
 
     if (miningWorker.value) {
       miningWorker.value.terminate();
@@ -33,12 +32,11 @@ export const useBlockChain = defineStore("blockchain", () => {
 
     miningWorker.value = new MineWorker();
 
-    const lastBlock = JSON.parse(JSON.stringify(blockchain.value.at(-1))); // Clona para um objeto puro
+    const lastBlock = JSON.parse(JSON.stringify(blockchain.value.at(-1)));
     miningWorker.value.postMessage({ lastBlock, difficulty: DIFFICULTY.value });
 
     miningWorker.value.onmessage = (event) => {
       if (event.data) {
-        // Atualiza a lista de hashes com o mais recente
         currentHash.value = event.data;
       }
 
@@ -50,11 +48,21 @@ export const useBlockChain = defineStore("blockchain", () => {
     };
   };
 
+  const StopMining = () => {
+    stop.value = true;
+    if (miningWorker.value) {
+      miningWorker.value.postMessage("stop"); // Envia o sinal de parada para o Worker
+      miningWorker.value.terminate();
+      miningWorker.value = null;
+    }
+  };
+
   return {
     blockchain,
     Mine,
+    StopMining, // Adicionando a função de parar a mineração
     setDifficulty,
     stop,
-    currentHash, // Expor para a UI
+    currentHash,
   };
 });
