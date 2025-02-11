@@ -2,8 +2,7 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import { genesi } from "./genesis.js";
 
-// Importa o Worker corretamente no Vite
-const WorkerUrl = new URL("@/workers/mineWorker.js", import.meta.url);
+import MineWorker from "@/workers/mineWorker?worker"; // <-- Importação correta no Vite
 
 export const useBlockChain = defineStore("blockchain", () => {
   const blockchain = ref([genesi()]);
@@ -32,7 +31,7 @@ export const useBlockChain = defineStore("blockchain", () => {
       miningWorker.value.terminate();
     }
 
-    miningWorker.value = new Worker(WorkerUrl, { type: "module" });
+    miningWorker.value = new MineWorker();
 
     const lastBlock = JSON.parse(JSON.stringify(blockchain.value.at(-1))); // Clona para um objeto puro
     miningWorker.value.postMessage({ lastBlock, difficulty: DIFFICULTY.value });
