@@ -8,8 +8,8 @@ self.onmessage = function (event) {
     return;
   }
 
-  const { lastBlock, difficulty, workerIndex } = event.data;
-  let nonce = 0;
+  const { lastBlock, difficulty, workerIndex, startNonce } = event.data;
+  let nonce = startNonce || 0;
   let hash = "";
   let timestamp;
 
@@ -28,8 +28,10 @@ self.onmessage = function (event) {
 
     hash = blockHash(newBlock);
 
-    // Envia cada hash gerado para a UI
-    self.postMessage({ hash, nonce, difficulty, workerIndex });
+    // Envia cada hash gerado para a UI apenas se houver uma mudança significativa
+    if (nonce % 5000 === 0) {
+      self.postMessage({ hash, nonce, difficulty, workerIndex });
+    }
 
     if (hash.startsWith("0".repeat(difficulty))) {
       self.postMessage({ newBlock: { ...newBlock, hash }, done: true, workerIndex });

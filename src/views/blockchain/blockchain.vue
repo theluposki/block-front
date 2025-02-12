@@ -9,11 +9,6 @@ const difficulty = ref(2);
 const blockchain = computed(() => uBlockchain.blockchain);
 const currentHash = computed(() => uBlockchain.currentHash);
 
-// Propriedade computada que formata o tempo decorrido (acessando .value)
-const miningTime = computed(() => {
-  return (uBlockchain.elapsedTime.value / 1000).toFixed(2) + ' s';
-});
-
 const setDiff = () => {
   uBlockchain.setDifficulty(difficulty.value);
 }
@@ -36,7 +31,7 @@ const setDiff = () => {
       </div>
       
       <!-- Exibe o tempo de mineração -->
-      <p class="green">Tempo de mineração: {{ miningTime }}</p>
+      <p class="green">Tempo de mineração: {{ uBlockchain.getElapsedTime() }}</p>
       
       <JsonViewer :json-text="blockchain[blockchain.length - 1]" />
     </div>

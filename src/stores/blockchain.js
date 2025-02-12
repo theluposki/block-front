@@ -8,17 +8,15 @@ export const useBlockChain = defineStore("blockchain", () => {
   const blockchain = ref([genesi()]);
   // Dificuldade para o proof-of-work
   const DIFFICULTY = ref(2);
-  // Flag para parar a mineração (caso necessário)
+  // Flag para parar a mineração
   const stop = ref(false);
   // Armazena o status do hash e outras informações enviadas pelos workers
   const currentHash = ref({});
-  // Array para armazenar os workers ativos (mineração paralela)
+  // Array para armazenar os workers ativos
   const workers = ref([]);
 
   // Variáveis para controle do tempo de mineração
   const miningStartTime = ref(null);
-  const elapsedTime = ref(0);
-  let timerInterval = null;
 
   /**
    * Altera o nível de dificuldade
@@ -37,6 +35,31 @@ export const useBlockChain = defineStore("blockchain", () => {
   };
 
   /**
+   * Calcula o tempo decorrido da mineração (evita `setInterval`)
+   */
+  const getElapsedTime = () => {
+    if (!miningStartTime.value) return "0s"; // Caso não tenha iniciado a mineração
+  
+    const elapsedTime = Date.now() - miningStartTime.value;
+  
+    const days = Math.floor(elapsedTime / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((elapsedTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((elapsedTime % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((elapsedTime % (1000 * 60)) / 1000);
+    const milliseconds = elapsedTime % 1000;
+  
+    // Montando a string de tempo formatada
+    const timeParts = [];
+    if (days > 0) timeParts.push(`${days}d`);
+    if (hours > 0) timeParts.push(`${hours}h`);
+    if (minutes > 0) timeParts.push(`${minutes}m`);
+    if (seconds > 0) timeParts.push(`${seconds}s`);
+    if (milliseconds > 0) timeParts.push(`${milliseconds}ms`);
+  
+    return timeParts.join(" ");
+  };
+  
+  /**
    * Inicia a mineração utilizando múltiplos Web Workers.
    * O primeiro worker a encontrar um hash válido encerra a mineração
    * e os demais são terminados.
@@ -47,44 +70,42 @@ export const useBlockChain = defineStore("blockchain", () => {
 
     // Encerra quaisquer workers ativos antes de iniciar uma nova mineração
     workers.value.forEach((w) => w.terminate());
-    workers.value = [];
+    workers.value.length = 0;
 
     // Inicia a contagem do tempo
     miningStartTime.value = Date.now();
-    elapsedTime.value = 0;
-    if (timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      elapsedTime.value = Date.now() - miningStartTime.value;
-    }, 100);
 
     // Converte o último bloco para um objeto puro (evita problemas com reatividade)
     const lastBlock = JSON.parse(JSON.stringify(blockchain.value.at(-1)));
     let found = false;
     const NUM_WORKERS = 4; // Número de workers paralelos
 
-    // Inicia cada worker com os parâmetros necessários
+    // Inicia cada worker com um nonce inicial diferente
     for (let i = 0; i < NUM_WORKERS; i++) {
       const worker = new MineWorker();
       worker.postMessage({
         lastBlock,
         difficulty: DIFFICULTY.value,
         workerIndex: i,
+        startNonce: i * 100000, // Cada worker começa em um nonce diferente
       });
+
       worker.onmessage = (event) => {
         if (event.data) {
-          // Atualiza o status (hash, nonce, etc.) para exibição em tempo real
-          currentHash.value = event.data;
+          // Atualiza o status do hash apenas se houver mudança significativa
+          if (event.data.hash !== currentHash.value.hash) {
+            currentHash.value = event.data;
+          }
         }
+
         // Se o worker encontrar um hash válido e a mineração ainda não tiver sido finalizada
         if (event.data.done && !found) {
           found = true;
           addBlock(event.data.newBlock);
-          // Encerra o timer
-          clearInterval(timerInterval);
-          timerInterval = null;
-          // Termina todos os workers
+
+          // Termina todos os workers imediatamente
           workers.value.forEach((w) => w.terminate());
-          workers.value = [];
+          workers.value.length = 0;
         }
       };
       workers.value.push(worker);
@@ -93,9 +114,8 @@ export const useBlockChain = defineStore("blockchain", () => {
 
   /**
    * Interrompe a mineração:
-   * - Envia sinal de parada para os workers (caso implementado)
+   * - Envia sinal de parada para os workers
    * - Termina os workers ativos
-   * - Limpa o timer de tempo decorrido
    */
   const StopMining = () => {
     stop.value = true;
@@ -103,11 +123,7 @@ export const useBlockChain = defineStore("blockchain", () => {
       w.postMessage("stop");
       w.terminate();
     });
-    workers.value = [];
-    if (timerInterval) {
-      clearInterval(timerInterval);
-      timerInterval = null;
-    }
+    workers.value.length = 0;
   };
 
   return {
@@ -117,6 +133,6 @@ export const useBlockChain = defineStore("blockchain", () => {
     setDifficulty,
     stop,
     currentHash,
-    elapsedTime, // Tempo decorrido em milissegundos (para uso na UI)
+    getElapsedTime, // Agora a UI pode chamar diretamente
   };
 });
