@@ -7,6 +7,7 @@
       <button v-if="updateAvailable" class="btn" @click="updatePWA">Atualizar</button>
       <button class="btn" @click="reinstallPWA">Reinstalar</button>
       <button class="btn" @click="checkForUpdates">Verificar Atualizações</button>
+      <button class="btn" @click="clearChains">Deletar chains</button>
     </div>
   </div>
 </template>
@@ -14,10 +15,17 @@
 <script setup>
 import { registerSW } from "virtual:pwa-register";
 import { ref, onMounted } from "vue";
+import db from "@/database/db.js"
 
 const updateAvailable = ref(false);
 const currentVersion = ref(localStorage.getItem("version") || "Desconhecido");
 const newVersion = ref(null);
+
+const clearChains = async () => {
+  if (confirm("Tem certeza que deseja deletar a blockchain?")) {
+    await db.blocks.clear();
+  }
+}
 
 const updateServiceWorker = registerSW({
   onNeedRefresh() {
