@@ -10,7 +10,12 @@ export const useBlockChain = defineStore("blockchain", () => {
   const blockchain = ref([]);
   const DIFFICULTY = ref(2);
   const stop = ref(false);
-  const currentHash = ref({});
+  const currentHash = ref({
+    hash: "",
+    nonce: 0,
+    difficulty: DIFFICULTY.value,
+    workerIndex: 0,
+  });
   const workers = ref([]);
   const miningStartTime = ref(null);
 

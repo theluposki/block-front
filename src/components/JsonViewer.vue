@@ -1,9 +1,13 @@
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
 
 const props = defineProps({
     jsonText: Object, // Recebe o JSON como prop
 });
+
+onMounted(() => {
+    // console.log('props: ', JSON?.parse(JSON?.stringify(props.jsonText)))
+})
 
 const formattedJson = ref("");
 
@@ -15,7 +19,11 @@ const getInlineStyles = () => ({
     null: 'color: #ff5555;'
 });
 
-const syntaxHighlight = (json) => {
+const syntaxHighlight = (jsontext) => {
+    if(!jsontext) return 
+
+    let json = JSON?.parse(JSON?.stringify(jsontext))
+
     const styles = getInlineStyles();
 
     if (typeof json !== "string") {

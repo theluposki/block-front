@@ -28,6 +28,13 @@ self.onmessage = function (event) {
 
     hash = blockHash(newBlock);
 
+    if(difficulty == 1) {
+      self.postMessage({ hash, nonce, difficulty, workerIndex });
+    }
+
+    if(difficulty <= 3 && nonce % 50 === 0 ) {
+      self.postMessage({ hash, nonce, difficulty, workerIndex });
+    }
     // Envia cada hash gerado para a UI apenas se houver uma mudança significativa
     if (nonce % 5000 === 0) {
       self.postMessage({ hash, nonce, difficulty, workerIndex });
