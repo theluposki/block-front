@@ -7,7 +7,7 @@
       <button v-if="updateAvailable" class="btn" @click="updatePWA">Atualizar</button>
       <button class="btn" @click="reinstallPWA">Reinstalar</button>
       <button class="btn" @click="checkForUpdates">Verificar Atualizações</button>
-      <button class="btn" @click="clearChains">Deletar chains</button>
+      <button class="btn" @click="clearChains">Deletar chains!</button>
     </div>
   </div>
 </template>
