@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { defineStore } from "pinia";
 import { genesi } from "./genesis.js";
 import MineWorker from "@/workers/mineWorker?worker";
-import db from "@/database/db.js"; // Importa o Dexie configurado
+import { db } from "@/database/db.js"; // Importa o Dexie configurado
 
 export const useBlockChain = defineStore("blockchain", () => {
   // Estado inicial reativo

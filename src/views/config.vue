@@ -15,7 +15,7 @@
 <script setup>
 import { registerSW } from "virtual:pwa-register";
 import { ref, onMounted } from "vue";
-import db from "@/database/db.js"
+import { db } from "@/database/db.js"
 
 const updateAvailable = ref(false);
 const currentVersion = ref(localStorage.getItem("version") || "Desconhecido");
