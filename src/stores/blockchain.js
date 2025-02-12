@@ -78,7 +78,9 @@ export const useBlockChain = defineStore("blockchain", () => {
     // Converte o último bloco para um objeto puro (evita problemas com reatividade)
     const lastBlock = JSON.parse(JSON.stringify(blockchain.value.at(-1)));
     let found = false;
-    const NUM_WORKERS = 4; // Número de workers paralelos
+    const NUM_WORKERS = navigator.hardwareConcurrency || 4
+
+    console.log('hardwareConcurrency: ', navigator.hardwareConcurrency)
 
     // Inicia cada worker com um nonce inicial diferente
     for (let i = 0; i < NUM_WORKERS; i++) {

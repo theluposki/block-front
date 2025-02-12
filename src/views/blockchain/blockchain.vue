@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import JsonViewer from '@/components/JsonViewer.vue';
 import { useBlockChain } from '@/stores/blockchain';
+import TableDifficulty from './components/tableDifficulty.vue';
 
 const uBlockchain = useBlockChain();
 const difficulty = ref(2);
@@ -22,7 +23,10 @@ const setDiff = () => {
       <p class="red">proof of work</p>
       <JsonViewer :json-text="currentHash" />
       
-      <p class="green">Nível de dificuldade</p>
+      <details>
+        <summary class="green">Nível de dificuldade</summary>
+        <TableDifficulty />
+      </details>
       <input type="number" v-model="difficulty" class="input" @keyup="setDiff" placeholder="dificuldade" min="0" max="10">
       
       <div class="group-btns">
